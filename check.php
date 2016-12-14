@@ -9,6 +9,14 @@
 
 <?php
 session_start();
+header('Expires:-1');
+header('Cache-Control:');
+header('Pragma:');
+
+if($_POST['token'] != session_id()){
+	http_response_code(403);
+}
+
 require('dbconnect.php');
 mysqli_set_charset($db, 'utf8');
 
@@ -20,9 +28,8 @@ if(!isset($_SESSION['join'])){
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 if(isset($_POST)){
 	//登録処理をする
-	$sql = sprintf('INSERT INTO users SET name="%s", mail="%s", pass="%s"',
+	$sql = sprintf('INSERT INTO users SET name="%s", pass="%s"',
 		mysqli_real_escape_string($db, $_SESSION['join']['name']),
-		mysqli_real_escape_string($db, $_SESSION['join']['mail']),
 		mysqli_real_escape_string($db, sha1($_SESSION['join']['pass']))
 	);
 	mysqli_query($db, $sql) or die(mysqli_error($db));
@@ -38,10 +45,6 @@ if(isset($_POST)){
   <dt>ユーザー名</dt>
   <dd>
     <?php echo htmlspecialchars($_SESSION['join']['name'], ENT_QUOTES, 'UTF-8'); ?>
-  </dd>
-  <dt>メールアドレス</dt>
-  <dd>
-    <?php echo htmlspecialchars($_SESSION['join']['mail'], ENT_QUOTES, 'UTF-8'); ?>
   </dd>
   <dt>パスワード</dt>
   <dd>
