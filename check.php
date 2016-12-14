@@ -13,6 +13,7 @@ header('Expires:-1');
 header('Cache-Control:');
 header('Pragma:');
 
+
 if($_POST['token'] != session_id()){
 	http_response_code(403);
 }
@@ -28,11 +29,15 @@ if(!isset($_SESSION['join'])){
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 if(isset($_POST)){
 	//登録処理をする
-	$sql = sprintf('INSERT INTO users SET name="%s", pass="%s"',
-		mysqli_real_escape_string($db, $_SESSION['join']['name']),
-		mysqli_real_escape_string($db, sha1($_SESSION['join']['pass']))
-	);
-	mysqli_query($db, $sql) or die(mysqli_error($db));
+	$sql = "INSERT INTO users SET name=? , pass=?";
+	$sth = $dbh->prepare($sql);
+	$sth->bindParam(1, $_SESSION['join']['name'], PDO::PARAM_STR);
+	$sth->bindParam(2, sha1($_SESSION['join']['pass']), PDO::PARAM_STR);
+	
+	if (!$sth->execute()) {
+    	die('クエリーpoint1が失敗しました。');
+	}
+
 	unset($_SESSION['join']);
 
 	header('Location: thanks.php');
