@@ -13,7 +13,7 @@ header('Cache-Control:');
 header('Pragma:');
 
 if($_POST['token'] != session_id()){
-	http_response_code(403);
+	die('不正な手続きです');
 }
 
 ?>
