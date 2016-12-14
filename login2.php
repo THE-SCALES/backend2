@@ -9,7 +9,6 @@
 
 <?php
 require('dbconnect.php');
-//mysqli_set_charset($db, 'utf8');
 session_start();
 header('Expires:-1');
 header('Cache-Control:');
@@ -26,7 +25,9 @@ if(!empty($_POST)){
 		$sth = $dbh->prepare($sql);
 		$sth->bindParam(1, $_POST['user'], PDO::PARAM_STR);
 		$sth->bindParam(2, sha1($_POST['pass']), PDO::PARAM_STR);
+
 		$sth->execute();
+		
     	if($table = $sth->fetch(PDO::FETCH_ASSOC)){
       	//ログイン成功
 	  	$_SESSION['name'] = $_POST['user'];
@@ -39,10 +40,8 @@ if(!empty($_POST)){
       	$error['login'] = 'failed';
     	}
 	}else{
-		http_response_code(403);
+		$error['login'] = 'blank';
 	}
-  }else{
-    $error['login'] = 'blank';
   }
 }
 ?>
