@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html>
 <head>
@@ -8,16 +7,17 @@
 
 <body>
 <?php
-require('dbconnect.php');
-mysqli_set_charset($db, 'utf8');
-$result = mysqli_query($db, "SELECT id FROM users ORDER BY id DESC");
-if (!$result) {
-    die('クエリーが失敗しました。'.mysqli_error());
+session_start();
+header('Expires:-1');
+header('Cache-Control:');
+header('Pragma:');
+
+if($_POST['token'] != session_id()){
+	http_response_code(403);
 }
-$row = mysqli_fetch_assoc($result);
+
 ?>
   <p>ユーザー登録が完了しました</p>
-  <p>あなたのIDは <font color="red"><b><?php print($row['id']); ?></b></font> です</p>
-  <p><a href="login.php">ログインする</a></p>
+  <p><a href="login2.php">ログインする</a></p>
 </body>	
 </html>
